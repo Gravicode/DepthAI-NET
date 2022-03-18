@@ -117,10 +117,6 @@ namespace DepthAI.Core
             Stride = ImageHelper.GetStride(size.Width, pxFormat);
             pixel32 = new byte[Stride * size.Height];
             pixelHandle = GCHandle.Alloc(pixel32, GCHandleType.Pinned);
-           
-            //tex = new Texture2D(300, 300, TextureFormat.ARGB32, false);
-            //pixel32 = tex.GetPixels32();
-            //Pin pixel32 array
             
             //Get the pinned address
             pixelPtr = pixelHandle.AddrOfPinnedObject();
@@ -155,21 +151,16 @@ namespace DepthAI.Core
                         headPoseRoll = HeadPoseRoll();
                         headPosePitch = HeadPosePitch();
 
-                        //valueCenterYaw = headPoseYaw.ToString();
-                        //valueCenterRoll = headPoseRoll.ToString();
-                        //valueCenterPitch = headPosePitch.ToString();
-
                         if (System.Math.Abs(headPoseRoll - oldHeadPoseRoll) > 2.0f && System.Math.Abs(headPosePitch - oldHeadPosePitch) > 2.0f && System.Math.Abs(headPoseYaw - oldHeadPoseYaw) > 2.0f)
                         {
 
-                            // roll
-
+                            //roll
                             //cube.transform.Rotate(0f, (headPoseRoll - oldHeadPoseRoll), 0f, Space.Self);
 
-                            // // pitch
-
+                            //pitch
                             //cube.transform.Rotate(0f, 0f, -(headPosePitch - oldHeadPosePitch), Space.Self);
-                            // // yaw
+
+                            //yaw
                             //cube.transform.Rotate((headPoseYaw - oldHeadPoseYaw), 0f, 0f, Space.Self);
                             oldHeadPoseRoll = headPoseRoll;
                             oldHeadPoseYaw = headPoseYaw;

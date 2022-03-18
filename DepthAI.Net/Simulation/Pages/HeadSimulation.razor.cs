@@ -43,31 +43,38 @@ namespace Simulation.Pages
 
                 if (SkullHead != null)
                 {
+                    /*
                     // roll
                     var vec = await Vector3.NewVector3();
                     await vec.set_x(0);
-                    await vec.set_y((decimal)(e.newHeadPoseRoll - oldHeadPoseRoll));
-                    await vec.set_z(0);
+                    await vec.set_y(0);
+                    await vec.set_z((decimal)(e.newHeadPoseRoll - oldHeadPoseRoll));
 
                     await SkullHead.set_rotation(vec);
                   
 
                     // // pitch
                     vec = await Vector3.NewVector3();
-                    await vec.set_x(0);
-                    await vec.set_y(0);
-                    await vec.set_z(-(decimal)(e.newHeadPosePitch - oldHeadPosePitch));
-
-                    await SkullHead.set_rotation(vec);
-
-                    // // yaw
-                    vec = await Vector3.NewVector3();
-                    await vec.set_x((decimal)(e.newHeadPoseYaw - oldHeadPoseYaw));
+                    await vec.set_x(-(decimal)(e.newHeadPosePitch - oldHeadPosePitch));
                     await vec.set_y(0);
                     await vec.set_z(0);
 
                     await SkullHead.set_rotation(vec);
 
+                    // // yaw
+                    vec = await Vector3.NewVector3();
+                    await vec.set_x(0);
+                    await vec.set_y((decimal)(e.newHeadPoseYaw - oldHeadPoseYaw));
+                    await vec.set_z(0);
+
+                    await SkullHead.set_rotation(vec);
+                    */
+                    var vec = await Vector3.NewVector3();
+                    await vec.set_x(-(decimal)(e.newHeadPosePitch - oldHeadPosePitch));
+                    await vec.set_y((decimal)(e.newHeadPoseYaw - oldHeadPoseYaw));
+                    await vec.set_z((decimal)(e.newHeadPoseRoll - oldHeadPoseRoll));
+
+                    await SkullHead.set_rotation(vec);
                     oldHeadPoseRoll = e.newHeadPoseRoll;
                     oldHeadPoseYaw = e.newHeadPoseYaw;
                     oldHeadPosePitch = e.newHeadPosePitch;

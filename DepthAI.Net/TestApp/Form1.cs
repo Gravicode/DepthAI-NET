@@ -17,12 +17,12 @@ namespace TestApp
             face = new FaceDetector();
             head = new HeadPose();
             BtnStart.Click += (a,b) => {
-                face.StartDevice();
-                //head.StartDevice();
+                //face.StartDevice();
+                head.StartDevice();
             };
             BtnStop.Click += (a,b) => {
-                face.StopDevice();
-                //head.StopDevice();
+                //face.StopDevice();
+                head.StopDevice();
             };
             face.FaceDetected += (_, o) => {
                 if (InvokeRequired)
@@ -31,14 +31,14 @@ namespace TestApp
                     {
                         PicBox1.Image = o.NewImage;
                         TxtInfo.Clear();
-                        TxtInfo.Text = $"center X: {o.valueCenterX}, center Y: {o.valueCenterY}";
+                        TxtInfo.Text = $"center X: {o.valueCenterX}\ncenter Y: {o.valueCenterY}";
                     });
                 }
                 else
                 {
                     PicBox1.Image = o.NewImage;
                     TxtInfo.Clear();
-                    TxtInfo.Text = $"center X: {o.valueCenterX}, center Y: {o.valueCenterY}";
+                    TxtInfo.Text = $"center X: {o.valueCenterX}\ncenter Y: {o.valueCenterY}";
                 }
             };
             
@@ -51,14 +51,14 @@ namespace TestApp
                     {
                         PicBox1.Image = o.NewImage;
                         TxtInfo.Clear();
-                        TxtInfo.Text = $"pitch: {o.newHeadPosePitch}, roll: {o.newHeadPoseRoll}, yaw:{o.newHeadPoseYaw}";
+                        TxtInfo.Text = $"pitch: {o.newHeadPosePitch}\nroll: {o.newHeadPoseRoll}\nyaw:{o.newHeadPoseYaw}";
                     });
                 }
                 else
                 {
                     PicBox1.Image = o.NewImage;
                     TxtInfo.Clear();
-                    TxtInfo.Text = $"pitch: {o.newHeadPosePitch}, roll: {o.newHeadPoseRoll}, yaw:{o.newHeadPoseYaw}";
+                    TxtInfo.Text = $"pitch: {o.newHeadPosePitch}\nroll: {o.newHeadPoseRoll}\nyaw:{o.newHeadPoseYaw}";
                 }
             };
         }
