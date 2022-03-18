@@ -148,6 +148,9 @@ namespace DepthAI.Core
                     if (deviceRunning)
                     {
                         HeadPosePreview(pixelPtr, Width, Height);
+
+                        
+
                         headPoseYaw = HeadPoseYaw();
                         headPoseRoll = HeadPoseRoll();
                         headPosePitch = HeadPosePitch();
@@ -168,12 +171,13 @@ namespace DepthAI.Core
                             //cube.transform.Rotate(0f, 0f, -(headPosePitch - oldHeadPosePitch), Space.Self);
                             // // yaw
                             //cube.transform.Rotate((headPoseYaw - oldHeadPoseYaw), 0f, 0f, Space.Self);
-
                             oldHeadPoseRoll = headPoseRoll;
                             oldHeadPoseYaw = headPoseYaw;
                             oldHeadPosePitch = headPosePitch;
-                        }
 
+                        }
+                        if(cameraImage!=null)
+                           cameraImage.Dispose();
                         cameraImage = GetImage();
                         HeadPoseChanged?.Invoke(this,new HeadPoseChangedArgs() { newHeadPosePitch = headPosePitch, newHeadPoseRoll = headPoseRoll, newHeadPoseYaw  = headPoseYaw,
                          oldHeadPosePitch = oldHeadPosePitch, oldHeadPoseRoll = oldHeadPoseRoll, oldHeadPoseYaw = oldHeadPoseYaw, NewImage = cameraImage});

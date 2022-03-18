@@ -3,9 +3,21 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.2.32210.308
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DepthAI.Core", "DepthAI.Core\DepthAI.Core.csproj", "{AFDF3776-667C-45DE-AAB3-AB989C8BB864}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DepthAI.Core", "DepthAI.Core\DepthAI.Core.csproj", "{AFDF3776-667C-45DE-AAB3-AB989C8BB864}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestApp", "TestApp\TestApp.csproj", "{E0AB8DEA-D5A1-4E53-BC4D-76CFAE534C69}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestApp", "TestApp\TestApp.csproj", "{E0AB8DEA-D5A1-4E53-BC4D-76CFAE534C69}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Lib", "Lib", "{12F150AC-2DEF-4C26-B28C-D7B283A8FB18}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{188C81B6-9E17-4096-83FD-1DABCC4FA463}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{C5E642DA-7152-409A-A828-0EB5AB5ADF0E}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Simulation", "Simulation\Simulation.csproj", "{8CAE0174-2D20-4A3D-9FB0-568AEB3817D2}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Demo3D", "Demo3D\Demo3D.csproj", "{D64DA59F-75A5-42AE-9C1B-7D95774C7005}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EventHorizon.Blazor.BabylonJS.Server", "EventHorizon.Blazor.BabylonJS.Server\EventHorizon.Blazor.BabylonJS.Server.csproj", "{4D9AFD68-0280-46AC-9969-34CD56E534B0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,9 +33,28 @@ Global
 		{E0AB8DEA-D5A1-4E53-BC4D-76CFAE534C69}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E0AB8DEA-D5A1-4E53-BC4D-76CFAE534C69}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E0AB8DEA-D5A1-4E53-BC4D-76CFAE534C69}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8CAE0174-2D20-4A3D-9FB0-568AEB3817D2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8CAE0174-2D20-4A3D-9FB0-568AEB3817D2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8CAE0174-2D20-4A3D-9FB0-568AEB3817D2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8CAE0174-2D20-4A3D-9FB0-568AEB3817D2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D64DA59F-75A5-42AE-9C1B-7D95774C7005}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D64DA59F-75A5-42AE-9C1B-7D95774C7005}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D64DA59F-75A5-42AE-9C1B-7D95774C7005}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D64DA59F-75A5-42AE-9C1B-7D95774C7005}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4D9AFD68-0280-46AC-9969-34CD56E534B0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4D9AFD68-0280-46AC-9969-34CD56E534B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4D9AFD68-0280-46AC-9969-34CD56E534B0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4D9AFD68-0280-46AC-9969-34CD56E534B0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{AFDF3776-667C-45DE-AAB3-AB989C8BB864} = {12F150AC-2DEF-4C26-B28C-D7B283A8FB18}
+		{E0AB8DEA-D5A1-4E53-BC4D-76CFAE534C69} = {188C81B6-9E17-4096-83FD-1DABCC4FA463}
+		{8CAE0174-2D20-4A3D-9FB0-568AEB3817D2} = {C5E642DA-7152-409A-A828-0EB5AB5ADF0E}
+		{D64DA59F-75A5-42AE-9C1B-7D95774C7005} = {188C81B6-9E17-4096-83FD-1DABCC4FA463}
+		{4D9AFD68-0280-46AC-9969-34CD56E534B0} = {12F150AC-2DEF-4C26-B28C-D7B283A8FB18}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {444CCBD1-3812-4018-98C1-577BC5AFE392}

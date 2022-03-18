@@ -1,0 +1,79 @@
+/// Generated - Do Not Edit
+using System;
+using System.Collections.Generic;
+using System.Text.Json.Serialization;
+using System.Threading.Tasks;
+using EventHorizon.Blazor.Interop;
+using EventHorizon.Blazor.Interop.Callbacks;
+using EventHorizon.Blazor.Interop.ResultCallbacks;
+using Microsoft.JSInterop;
+
+public interface XRReferenceSpace : ICachedEntity { }
+
+[JsonConverter(typeof(CachedEntityConverter<XRReferenceSpaceCachedEntity>))]
+public class XRReferenceSpaceCachedEntity : CachedEntityObject, XRReferenceSpace
+{
+    #region Static Accessors
+
+    #endregion
+
+    #region Static Properties
+
+    #endregion
+
+    #region Static Methods
+
+    #endregion
+
+    #region Accessors
+
+    #endregion
+
+    #region Properties
+        
+        public ActionCallback<CachedEntity> onreset
+        {
+            get
+            {
+            return EventHorizonBlazorInterop.Get<ActionCallback<CachedEntity>>(
+                    this.___guid,
+                    "onreset"
+                );
+            }
+            set
+            {
+
+                EventHorizonBlazorInterop.Set(
+                    this.___guid,
+                    "onreset",
+                    value
+                );
+            }
+        }
+    #endregion
+    
+    #region Constructor
+        public XRReferenceSpaceCachedEntity() : base() { }
+
+        public XRReferenceSpaceCachedEntity(
+            ICachedEntity entity
+        ) : base(entity)
+        {
+        }
+
+
+    #endregion
+
+    #region Methods
+        public XRReferenceSpaceCachedEntity getOffsetReferenceSpace(XRRigidTransform originOffset)
+        {
+            return EventHorizonBlazorInterop.FuncClass<XRReferenceSpaceCachedEntity>(
+                entity => new XRReferenceSpaceCachedEntity() { ___guid = entity.___guid },
+                new object[]
+                {
+                    new string[] { this.___guid, "getOffsetReferenceSpace" }, originOffset
+                }
+            );
+        }
+    #endregion
+}

@@ -126,6 +126,8 @@ namespace DepthAI.Core
                         FaceDetectorPreview(pixelPtr, Width, Height);
                         faceDetectorResultsMX = FaceDetectorResultsMX();
                         faceDetectorResultsMY = FaceDetectorResultsMY();
+                        if (cameraImage != null)
+                            cameraImage.Dispose();
                         cameraImage = GetImage();
                         FaceDetected?.Invoke(this, new FaceDetectedArgs()
                         {
