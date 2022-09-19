@@ -109,6 +109,9 @@ namespace DepthAI.Core
         Size Depthsize;
         int DepthStride;
 
+        public event EventHandler<FrameReceivedArgs> FrameReceived;
+        public event EventHandler<SystemInfoArgs> SystemInfoReceived;
+
         // Init textures. Each PredefinedBase implementation handles textures. Decoupled from external viz (Canvas, VFX, ...)
         void InitTexture()
         {
@@ -172,7 +175,10 @@ namespace DepthAI.Core
             //Get the pinned address
             _depthPixelPtr = _depthPixelHandle.AddrOfPinnedObject();
         }
-
+        public DaiStreams()
+        {
+            Start();
+        }
         // Start. Init textures and frameInfo
         void Start()
         {
@@ -364,6 +370,8 @@ namespace DepthAI.Core
                 }
             }
 
+            FrameReceived?.Invoke(this, new FrameReceivedArgs() { ColorImage = colorTexture, DepthImage = depthTexture, DisparityImage=disparityTexture, MonoLImage = monoLTexture, MonoRImage = monoRTexture });
+
             if (string.IsNullOrEmpty(streamsResults)) return;
 
             // EXAMPLE HOW TO PARSE INFO
@@ -377,6 +385,30 @@ namespace DepthAI.Core
             float chipTempAvg = obj["sysinfo"]["chip_temp_avg"];
             float cpuUsage = obj["sysinfo"]["cpu_usage"];
             systemInfo = "Device System Information\nddr used: "+ddrUsed+"MiB ddr total: "+ddrTotal+" MiB\n"+"cmx used: "+cmxUsed+" MiB cmx total: "+cmxTotal+" MiB\n"+"chip temp avg: "+chipTempAvg+"\n"+"cpu usage: "+cpuUsage+" %";
+            SystemInfoReceived?.Invoke(this, new SystemInfoArgs() { chipTempAvg = chipTempAvg, cmxTotal = cmxTotal, cmxUsed = cmxUsed, cpuUsage = cpuUsage, ddrTotal = ddrTotal, ddrUsed = ddrUsed, systemInfo = systemInfo });
         }
+    }
+    public class FrameReceivedArgs : EventArgs
+    {
+
+        
+
+        public Image? ColorImage { get; set; }
+        public Image? MonoRImage { get; set; }
+        public Image? MonoLImage { get; set; }
+        public Image? DisparityImage { get; set; }
+        public Image? DepthImage { get; set; }
+    }
+
+    public class SystemInfoArgs:EventArgs
+    {
+        public float ddrUsed { set; get; }
+        public float ddrTotal    {set;get;}
+        public float cmxUsed     {set;get;}
+        public float cmxTotal    {set;get;}
+        public float chipTempAvg {set;get;}
+        public float cpuUsage    {set;get;}
+        public string systemInfo {set;get;}
+
     }
 }

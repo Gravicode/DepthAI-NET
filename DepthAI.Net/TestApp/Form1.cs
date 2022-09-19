@@ -5,6 +5,7 @@ namespace TestApp
     public partial class Form1 : Form
     {
         DaiFaceDetector face;
+        DaiStreams stream;
         public Form1()
         {
             InitializeComponent();
@@ -15,20 +16,41 @@ namespace TestApp
         {
             var manager = new OAKDeviceManager();
             var list = manager.GetAvailableDevices();
-            face = new DaiFaceDetector();
+            //face = new DaiFaceDetector();
+            stream = new();
             BtnStart.Click += (a,b) => {
                 //face.StartDevice();
-                face.device = new();
+                //face.device = new();
+                stream.device = new();
                 var device = list.First();
-                face.device.deviceId = device.deviceId;
+                //face.device.deviceId = device.deviceId;
+                stream.device.deviceId = device.deviceId;
                 
-                face.ConnectDevice();
+                stream.ConnectDevice();
+                //face.ConnectDevice();
             };
             BtnStop.Click += (a,b) => {
                 //face.StopDevice();
-                face.FinishDevice();
+                //face.FinishDevice();
+                stream.FinishDevice();
             };
-            face.FaceDetected += (_, o) => {
+            stream.FrameReceived+=(_,o) => {
+                if (InvokeRequired)
+                {
+                    this.BeginInvoke((MethodInvoker)delegate ()
+                    {
+                        PicBox1.Image = o.ColorImage;
+                        TxtInfo.Clear();
+                    });
+                }
+                else
+                {
+                    PicBox1.Image = o.ColorImage;
+                    TxtInfo.Clear();
+                }
+            };
+            /*
+            face.FaceDetected += (_, o) => 
                 if (InvokeRequired)
                 {
                     this.BeginInvoke((MethodInvoker)delegate ()
@@ -45,7 +67,7 @@ namespace TestApp
                     TxtInfo.Text = $"center X: {o.valueCenterX}\ncenter Y: {o.valueCenterY}";
                 }
             };
-            /*
+            
             head.HeadPoseChanged += (_, o) => {
                 
 
