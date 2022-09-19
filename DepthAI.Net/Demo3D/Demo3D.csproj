@@ -31,7 +31,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-    <ProjectReference Include="..\DepthAI.Core\DepthAI.Core.csproj" />
     <ProjectReference Include="..\Simulation\Simulation.csproj" />
   </ItemGroup>
 
