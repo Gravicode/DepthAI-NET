@@ -318,7 +318,9 @@ namespace DepthAI.Core
                 depthTexture = GetImageDepth();
                 //depthTexture.SetPixels32(_depthPixel32);
                 //depthTexture.Apply();
-                
+
+                FrameReceived?.Invoke(this, new FrameReceivedArgs() { ColorImage = colorTexture, DepthImage = depthTexture, DisparityImage = disparityTexture, MonoLImage = monoLTexture, MonoRImage = monoRTexture });
+
                 // In case we're recording send data to unity device implementation
                 if (!device.recordResults) return;
                 List<Image> textures = new List<Image>()
@@ -370,8 +372,7 @@ namespace DepthAI.Core
                 }
             }
 
-            FrameReceived?.Invoke(this, new FrameReceivedArgs() { ColorImage = colorTexture, DepthImage = depthTexture, DisparityImage=disparityTexture, MonoLImage = monoLTexture, MonoRImage = monoRTexture });
-
+           
             if (string.IsNullOrEmpty(streamsResults)) return;
 
             // EXAMPLE HOW TO PARSE INFO

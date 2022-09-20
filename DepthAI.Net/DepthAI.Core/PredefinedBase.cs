@@ -11,7 +11,7 @@ using System.Threading;
 
 namespace DepthAI.Core
 {
-    public class PredefinedBase 
+    public class PredefinedBase : IDisposable
     {
         [DllImport("depthai-unity", CallingConvention = CallingConvention.Cdecl)]
         
@@ -288,6 +288,7 @@ namespace DepthAI.Core
          */
         public void FinishDevice()
         {
+            if (IsAnalysisRunning) StopAnalysis();
             if (processMode == ProcessMode.UnityThread)
             {
                 if (deviceRunning)
@@ -332,24 +333,58 @@ namespace DepthAI.Core
             _finishDeviceWorker.Start();
         }
         
-        void OnApplicationQuit()
-        {
-            FinishDevice();
-        }
+       
 
         // Update is called once per frame
         // For unity thread mode
-        void Update()
+        public void StartAnalysis()
         {
-            if (deviceRunning)
+            if (!IsAnalysisRunning)
             {
-                if (processMode == ProcessMode.UnityThread)
-                {
-                    GetResults();
-                }
-
-                ProcessResults();
+                tokenSource = new CancellationTokenSource();
+                DoLooping(tokenSource.Token);
+                IsAnalysisRunning = true;
             }
+        }
+        public void StopAnalysis()
+        {
+            if (IsAnalysisRunning)
+            {
+                tokenSource.Cancel();
+                IsAnalysisRunning = false;
+            }
+        }
+        bool IsAnalysisRunning = false;
+        int AnalysisDelayTime = 100;
+        CancellationTokenSource tokenSource;
+        void DoLooping(CancellationToken token,int DelayTime=100)
+        {
+            AnalysisDelayTime = DelayTime;
+            var thread1 = new Thread(new ThreadStart(() =>
+            {
+                while (true)
+                {
+                    if (token.IsCancellationRequested) break;
+
+                    if (deviceRunning)
+                    {
+                        if (processMode == ProcessMode.UnityThread)
+                        {
+                            GetResults();
+                        }
+
+                        ProcessResults();
+                    }
+                    Thread.Sleep(AnalysisDelayTime);
+
+                }
+            }));
+            thread1.Start();
+        }
+
+        public void Dispose()
+        {
+            FinishDevice();
         }
     }
 }

@@ -128,7 +128,10 @@ namespace DepthAI.Core
             depthTexture = new Bitmap(monoW, monoH, DepthPxFormat); //new Texture2D(monoW, monoH, TextureFormat.R16, false);
             
         }
-
+        public DaiPointCloudVFX()
+        {
+            Start();
+        }
         // Init textures. In this case we don't assign pointers previous copy
         void Start()
         {

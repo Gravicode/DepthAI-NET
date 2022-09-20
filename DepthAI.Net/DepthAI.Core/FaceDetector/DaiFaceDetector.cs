@@ -59,7 +59,7 @@ namespace DepthAI.Core
         public MedianFilter medianFilter;
         public bool useIMU = false;
         public bool retrieveSystemInformation = false;
-        public bool drawBestFaceInPreview;
+        public bool drawBestFaceInPreview=true;
         public bool drawAllFacesInPreview;
         public float faceScoreThreshold; 
         private const bool GETPreview = true;
@@ -154,10 +154,10 @@ namespace DepthAI.Core
             config.medianFilter = (int) medianFilter;
             
             // Face NN model
-            config.nnPath1 = _dataPath + "/Models/face-detection-retail-0004_openvino_2021.2_4shave.blob";
+            config.nnPath1 = _dataPath + "\\Models\\face-detection-retail-0004_openvino_2021.2_4shave.blob";
             // Plugin lib init pipeline implementation
             deviceRunning = InitFaceDetector(config);
-
+            
             // Check if was possible to init device with pipeline. Base class handles replay data if possible.
             if (!deviceRunning)
                 Debug.WriteLine(
