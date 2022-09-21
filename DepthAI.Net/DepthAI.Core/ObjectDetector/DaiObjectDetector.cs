@@ -236,12 +236,13 @@ namespace DepthAI.Core
                     // look for person and apple
                     //if (detection["label"] != "apple") continue;
                     if (!(detection["score"] < bestAppleScore)) continue;
-                    newEvent.DetectedObjects.Add(new ObjectInfo() { Label = detection["label"], Score = detection["score"], Position = (bestAppleDepthx == 0 && bestAppleDepthy == 0 && bestAppleDepthz == 0)? Vector3.Zero: new Vector3((float)bestAppleDepthx / 100.0f, (float)bestAppleDepthy / 100.0f, (float)bestAppleDepthz / 100.0f) });
                 
                     bestAppleScore = detection["score"];
                     bestAppleDepthx = detection["X"];
                     bestAppleDepthy = detection["Y"];
                     bestAppleDepthz = detection["Z"];
+                    newEvent.DetectedObjects.Add(new ObjectInfo() { Label = detection["label"], Score = detection["score"], Position = (bestAppleDepthx == 0 && bestAppleDepthy == 0 && bestAppleDepthz == 0) ? Vector3.Zero : new Vector3((float)bestAppleDepthx / 100.0f, (float)bestAppleDepthy / 100.0f, (float)bestAppleDepthz / 100.0f) });
+
                 }
 
                 if (bestAppleDepthx == 0 && bestAppleDepthy == 0 && bestAppleDepthz == 0) {}
