@@ -37,10 +37,10 @@ namespace DepthAI.Core
         * @param useIMU True if IMU information is requested, False otherwise. Requires freq in pipeline creation.
         * @param deviceNum Device selection on unity dropdown
         * @returns Json with results or information about device availability. 
-        */    
-        private static extern IntPtr ObjectDetectorResults(out FrameInfo frameInfo, bool getPreview,float objectScoreThreshold, bool useDepth, bool retrieveInformation, bool useIMU, int deviceNum);
+        */
+        private static extern IntPtr ObjectDetectorResults(out FrameInfo frameInfo, bool getPreview, float objectScoreThreshold, bool useDepth, bool retrieveInformation, bool useIMU, int deviceNum);
 
-        
+
         // Editor attributes
         //[Header("RGB Camera")] 
         public float cameraFPS = 30;
@@ -55,7 +55,7 @@ namespace DepthAI.Core
         public MedianFilter medianFilter;
         public bool useIMU = false;
         public bool retrieveSystemInformation = false;
-        public float detectionScoreThreshold; 
+        public float detectionScoreThreshold;
         private const bool GETPreview = true;
         private const bool UseDepth = true;
 
@@ -74,6 +74,7 @@ namespace DepthAI.Core
         Size size;
         int Stride;
         PixelFormat pxFormat = PixelFormat.Format32bppArgb;
+        float x1, x2, y1, y2;
         // Init textures. Each PredefinedBase implementation handles textures. Decoupled from external viz (Canvas, VFX, ...)
         void InitTexture()
         {
@@ -82,7 +83,7 @@ namespace DepthAI.Core
             //Because the image Pixel format is 1 Byte/pixel.
             //Usually stride = "ByterPerPixel"*Width
             Stride = ImageHelper.GetStride(size.Width, pxFormat);
-            colorTexture = new Bitmap(size.Width,size.Height);
+            colorTexture = new Bitmap(size.Width, size.Height);
             _colorPixel32 = new byte[Stride * size.Height];
             _colorPixelHandle = GCHandle.Alloc(_colorPixel32, GCHandleType.Pinned);
             //Pin pixel32 array
@@ -100,7 +101,7 @@ namespace DepthAI.Core
             apple = new();
             // Init dataPath to load object detector NN model
             _dataPath = PathHelper.AssemblyDirectory;
-            
+
             InitTexture();
 
             // Init FrameInfo. Only need it in case memcpy data ptr on plugin lib.
@@ -112,16 +113,16 @@ namespace DepthAI.Core
         {
             // Color camera
             config.colorCameraFPS = cameraFPS;
-            config.colorCameraResolution = (int) rgbResolution;
+            config.colorCameraResolution = (int)rgbResolution;
             config.colorCameraInterleaved = Interleaved;
-            config.colorCameraColorOrder = (int) ColorOrderV;
+            config.colorCameraColorOrder = (int)ColorOrderV;
             // Need it for color camera preview
             config.previewSizeHeight = 416;
             config.previewSizeWidth = 416;
-            
+
             // Mono camera
-            config.monoLCameraResolution = (int) monoResolution;
-            config.monoRCameraResolution = (int) monoResolution;
+            config.monoLCameraResolution = (int)monoResolution;
+            config.monoRCameraResolution = (int)monoResolution;
 
             // Depth
             // Need it for depth
@@ -133,15 +134,15 @@ namespace DepthAI.Core
             config.depthAlign = 0; // RGB align
             config.subpixel = false;
             config.deviceId = device.deviceId;
-            config.deviceNum = (int) device.deviceNum;
+            config.deviceNum = (int)device.deviceNum;
             if (useIMU) config.freq = 400;
             if (retrieveSystemInformation) config.rate = 30.0f;
-            config.medianFilter = (int) medianFilter;
-            
+            config.medianFilter = (int)medianFilter;
+
             // Object NN model
             config.nnPath1 = _dataPath +
                              "/Models/yolo-v4-tiny-tf_openvino_2021.4_6shave.blob";
-            
+
             // Plugin lib init pipeline implementation
             deviceRunning = InitObjectDetector(config);
 
@@ -160,7 +161,7 @@ namespace DepthAI.Core
             if (!device.replayResults)
             {
                 // Plugin lib pipeline results implementation
-                objectDetectorResults = Marshal.PtrToStringAnsi(ObjectDetectorResults(out frameInfo, GETPreview, detectionScoreThreshold, UseDepth, retrieveSystemInformation, useIMU, (int) device.deviceNum));
+                objectDetectorResults = Marshal.PtrToStringAnsi(ObjectDetectorResults(out frameInfo, GETPreview, detectionScoreThreshold, UseDepth, retrieveSystemInformation, useIMU, (int)device.deviceNum));
             }
             // if replay read results from file
             else
@@ -207,11 +208,11 @@ namespace DepthAI.Core
             }
 
             if (string.IsNullOrEmpty(objectDetectorResults)) return;
-            
+
             var obj = JSON.Parse(objectDetectorResults);
             //int centerx = 0;
             //int centery = 0;
-            
+
             if (obj != null)
             {
                 var newEvent = new ObjectDetectedArgs();
@@ -221,51 +222,57 @@ namespace DepthAI.Core
                 {
                     List<Image> textures = new List<Image>()
                         {colorTexture};
-                    List<string> nameTextures = new List<string>() {"color"};
+                    List<string> nameTextures = new List<string>() { "color" };
 
                     device.Record(objectDetectorResults, textures, nameTextures);
                 }
 
-                float bestAppleScore = 10000000.0f;;
+                float bestAppleScore = 10000000.0f; ;
                 int bestAppleDepthx = 0;
                 int bestAppleDepthy = 0;
                 int bestAppleDepthz = 0;
-               
+
                 foreach (JSONNode detection in obj["objects"])
                 {
                     // look for person and apple
                     //if (detection["label"] != "apple") continue;
                     if (!(detection["score"] < bestAppleScore)) continue;
-                
+
                     bestAppleScore = detection["score"];
                     bestAppleDepthx = detection["X"];
                     bestAppleDepthy = detection["Y"];
                     bestAppleDepthz = detection["Z"];
-                    newEvent.DetectedObjects.Add(new ObjectInfo() { Label = detection["label"], Score = detection["score"], Position = (bestAppleDepthx == 0 && bestAppleDepthy == 0 && bestAppleDepthz == 0) ? Vector3.Zero : new Vector3((float)bestAppleDepthx / 100.0f, (float)bestAppleDepthy / 100.0f, (float)bestAppleDepthz / 100.0f) });
+                    x1 = detection["xmin"];
+                    x2 = detection["xmax"];
+                    y1 = detection["ymin"];
+                    y2 = detection["ymax"];
+
+
+                    newEvent.DetectedObjects.Add(new ObjectInfo() { P1 = new PointF(x1, y1), P2 = new PointF(x2, y2), Label = detection["label"], Score = detection["score"], Position = (bestAppleDepthx == 0 && bestAppleDepthy == 0 && bestAppleDepthz == 0) ? Vector3.Zero : new Vector3((float)bestAppleDepthx / 100.0f, (float)bestAppleDepthy / 100.0f, (float)bestAppleDepthz / 100.0f) });
 
                 }
 
-                if (bestAppleDepthx == 0 && bestAppleDepthy == 0 && bestAppleDepthz == 0) {}
+                if (bestAppleDepthx == 0 && bestAppleDepthy == 0 && bestAppleDepthz == 0) { }
                 else
                 {
                     // move apple object
                     // Normalize 3D position of object regarding the camera to the Unity scene depending your use case / design / needs
                     //apple.transform.localPosition = new Vector3((float)bestAppleDepthx/100.0f,(float)bestAppleDepthy/100.0f,(float)bestAppleDepthz/100.0f);
-                    apple.Position = new Vector3((float)bestAppleDepthx/100.0f,(float)bestAppleDepthy/100.0f,(float)bestAppleDepthz/100.0f);
+                    apple.Position = new Vector3((float)bestAppleDepthx / 100.0f, (float)bestAppleDepthy / 100.0f, (float)bestAppleDepthz / 100.0f);
                 }
                 newEvent.NewImage = colorTexture;
                 ObjectDetected?.Invoke(this, newEvent);
             }
-            
+
             if (!retrieveSystemInformation || obj == null) return;
-            
+
             float ddrUsed = obj["sysinfo"]["ddr_used"];
             float ddrTotal = obj["sysinfo"]["ddr_total"];
             float cmxUsed = obj["sysinfo"]["cmx_used"];
             float cmxTotal = obj["sysinfo"]["ddr_total"];
             float chipTempAvg = obj["sysinfo"]["chip_temp_avg"];
             float cpuUsage = obj["sysinfo"]["cpu_usage"];
-            systemInfo = "Device System Information\nddr used: "+ddrUsed+"MiB ddr total: "+ddrTotal+" MiB\n"+"cmx used: "+cmxUsed+" MiB cmx total: "+cmxTotal+" MiB\n"+"chip temp avg: "+chipTempAvg+"\n"+"cpu usage: "+cpuUsage+" %";
+            systemInfo = "Device System Information\nddr used: " + ddrUsed + "MiB ddr total: " + ddrTotal + " MiB\n" + "cmx used: " + cmxUsed + " MiB cmx total: " + cmxTotal + " MiB\n" + "chip temp avg: " + chipTempAvg + "\n" + "cpu usage: " + cpuUsage + " %";
         }
     }
     public class ObjectDetectedArgs : EventArgs
@@ -278,5 +285,8 @@ namespace DepthAI.Core
         public string Label { get; set; }
         public float Score { get; set; }
         public Vector3 Position { get; set; }
+
+        public PointF P1 { get; set; }
+        public PointF P2 { get; set; }
     }
 }

@@ -132,7 +132,7 @@ namespace TestApp
                                 TxtInfo.Clear();
                                 foreach (var obj in o.DetectedObjects)
                                 {
-                                    TxtInfo.Text += $"label: {obj.Label}, score: {obj.Score}, pos: ({obj.Position.X},{obj.Position.Y},{obj.Position.Z})\n";
+                                    TxtInfo.Text += $"label: {obj.Label}, score: {obj.Score}, pos: ({obj.P1.X},{obj.Position.Y})-({obj.P2.X},{obj.P2.Y})\n";
                                 }
                             }
                         };
