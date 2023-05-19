@@ -8,6 +8,7 @@ namespace TestApp
         DaiStreams stream;
         DaiObjectDetector objdet;
         DaiBodyPose pose;
+        DaiFaceEmotions emotion;
         public Form1()
         {
             InitializeComponent();
@@ -30,6 +31,7 @@ namespace TestApp
         {
             var listAnalysis = new List<analysistype>() { 
              new analysistype ("face","face"),
+             new analysistype ("emotion","emotion"),
              new analysistype ("body pose","body-pose"),
              new analysistype ("object detector","object-detector"),
              new analysistype ("streams","streams"),
@@ -76,7 +78,34 @@ namespace TestApp
                         face.ConnectDevice();
                        
                         face.StartAnalysis();
-                        break;  
+                        break;
+                    case "emotion":
+                        emotion = new  DaiFaceEmotions();
+
+                        emotion.FaceEmotionDetected += (_, o) => {
+                            if (InvokeRequired)
+                            {
+                                this.BeginInvoke((MethodInvoker)delegate ()
+                                {
+                                    PicBox1.Image = o.NewImage;
+                                    TxtInfo.Clear();
+                                    TxtInfo.Text = $"center X: {o.valueCenterX}\ncenter Y: {o.valueCenterY}\nanger: {o.angerProb}\nneutral: {o.neutralProb}\nsurprise: {o.surpriseProb}\nsad: {o.sadProb}\nhappy: {o.happyProb}";
+                                });
+                            }
+                            else
+                            {
+                                PicBox1.Image = o.NewImage;
+                                TxtInfo.Clear();
+                                TxtInfo.Text = $"center X: {o.valueCenterX}\ncenter Y: {o.valueCenterY}\nanger: {o.angerProb}\nneutral: {o.neutralProb}\nsurprise: {o.surpriseProb}\nsad: {o.sadProb}\nhappy: {o.happyProb}";
+                            }
+                        };
+
+                        emotion.device = new();
+                        emotion.device.deviceId = device.deviceId;
+                        emotion.ConnectDevice();
+
+                        emotion.StartAnalysis();
+                        break;
                     case "streams":
                         stream = new();
 
@@ -206,6 +235,10 @@ namespace TestApp
                     case "face":
                         face.FinishDevice();
                         face.Dispose();
+                        break;
+                    case "emotion":
+                        emotion.FinishDevice();
+                        emotion.Dispose();
                         break;
                     case "streams":
                         stream.FinishDevice();
