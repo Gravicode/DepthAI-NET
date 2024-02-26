@@ -9,6 +9,7 @@ namespace TestApp
         DaiObjectDetector objdet;
         DaiBodyPose pose;
         DaiFaceEmotions emotion;
+        DaiHeadPose head;
         public Form1()
         {
             InitializeComponent();
@@ -35,6 +36,7 @@ namespace TestApp
              new analysistype ("body pose","body-pose"),
              new analysistype ("object detector","object-detector"),
              new analysistype ("streams","streams"),
+             new analysistype ("head pose","head-pose"),
             };
             CmbType.DataSource = listAnalysis;
             CmbType.DisplayMember = "name";
@@ -223,6 +225,33 @@ namespace TestApp
 
                         pose.StartAnalysis();
                         break;
+                    case "head-pose":
+                        head = new DaiHeadPose();
+
+                        head.HeadPoseChanged += (_, o) => {
+                            if (InvokeRequired)
+                            {
+                                this.BeginInvoke((MethodInvoker)delegate ()
+                                {
+                                    PicBox1.Image = o.NewImage;
+                                    TxtInfo.Clear();
+                                    TxtInfo.Text = $"yaw: {o.HeadYaw}\nroll: {o.HeadRoll}\npitch: {o.HeadPitch}";
+                                });
+                            }
+                            else
+                            {
+                                PicBox1.Image = o.NewImage;
+                                TxtInfo.Clear();
+                                TxtInfo.Text = $"yaw: {o.HeadYaw}\nroll: {o.HeadRoll}\npitch: {o.HeadPitch}";
+                            }
+                        };
+
+                        head.device = new();
+                        head.device.deviceId = device.deviceId;
+                        head.ConnectDevice();
+
+                        head.StartAnalysis();
+                        break;
                     default:
                         break;
                 }
@@ -251,6 +280,10 @@ namespace TestApp
                     case "body-pose":
                         pose.FinishDevice();
                         pose.Dispose();
+                        break;
+                    case "head-pose":
+                        head.FinishDevice();
+                        head.Dispose();
                         break;
                     default:
                         break;
